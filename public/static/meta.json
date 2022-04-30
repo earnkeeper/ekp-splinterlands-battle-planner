@@ -1,0 +1,9 @@
+{
+  "id": "ekp-splinterlands-battle-planner",
+  "gameId": "splinterlands",
+  "name": "Battle Planner",
+  "github": "https://github.com/earnkeeper/ekp-splinterlands-battle-planner",
+  "image": "/static/market.jpeg",
+  "mainPage": "planner",
+  "description": "Which team should you choose for your next match? Check by team popularity and win rate."
+}
