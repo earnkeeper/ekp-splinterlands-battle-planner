@@ -21,9 +21,6 @@
     "resolveJsonModule": true,
     "paths": {
       "@/*": ["src/*"],
-      "@feature/*": ["src/feature/*"],
-      "@shared/*": ["src/shared/*"],
-      "@util/*": ["src/util/*"]
     }
   }
 }

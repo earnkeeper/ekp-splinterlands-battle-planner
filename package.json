@@ -1,7 +1,7 @@
 {
   "name": "ekp-splinterlands-battle-planner",
   "version": "0.1.0",
-  "description": "EarnKeeper.io plugin for https://splinterlands.com/",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "prebuild": "rimraf dist",
