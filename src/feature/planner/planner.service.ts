@@ -57,7 +57,7 @@ export class PlannerService {
     return {
       plannerDocuments,
       battleCount: teams[0]?.battlesTotal,
-      firstBattleTimestamp: teams[0]?.battlesStart.getTime() / 1000,
+      firstBattleTimestamp: teams[0]?.battlesStart,
     };
   }
 
