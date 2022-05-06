@@ -1,3 +1,4 @@
+import { DEFAULT_MAIN_FORM } from '@/util';
 import {
   ClientConnectedEvent,
   ClientDisconnectedEvent,
@@ -12,8 +13,6 @@ import {
   logger,
 } from '@earnkeeper/ekp-sdk-nestjs';
 import { Injectable } from '@nestjs/common';
-import { DEFAULT_MAIN_FORM } from '@/util';
-import _ from 'lodash';
 import { PlannerService } from './planner.service';
 import { PlannerViewBag } from './ui/planner-view-bag.document';
 import { PlannerDocument } from './ui/planner.document';
@@ -56,7 +55,7 @@ export class PlannerController extends AbstractController {
     try {
       const form = event.state.forms?.planner ?? DEFAULT_MAIN_FORM;
 
-      const { plannerDocuments, battles } =
+      const { plannerDocuments, battleCount, firstBattleTimestamp } =
         await this.plannerService.getPlannerDocuments(
           form,
           event.state.client.subscribed,
@@ -71,11 +70,8 @@ export class PlannerController extends AbstractController {
 
       const viewBag = new PlannerViewBag({
         id: 'viewbag',
-        battleCount: battles.length,
-        firstBattleTimestamp: _.chain(battles)
-          .map((battle) => battle.timestamp)
-          .min()
-          .value(),
+        battleCount,
+        firstBattleTimestamp,
       });
 
       await this.clientService.emitDocuments(

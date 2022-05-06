@@ -1,17 +1,16 @@
+import { DEFAULT_MAIN_FORM, MainForm } from '@/util';
 import { CurrencyDto } from '@earnkeeper/ekp-sdk';
 import { Injectable } from '@nestjs/common';
 import { validate } from 'bycontract';
 import _ from 'lodash';
 import moment from 'moment';
-import { IgnRepository } from '../../shared/db';
+import { v4 as uuidv4 } from 'uuid';
 import {
-  Card,
-  CardService,
-  MarketService,
-  ResultsService,
-  TeamResults,
-} from '../../shared/game';
-import { DEFAULT_MAIN_FORM, MainForm } from '@/util';
+  IgnRepository,
+  PlannerTeam,
+  PlannerTeamRepository,
+} from '../../shared/db';
+import { Card, CardService, MarketService } from '../../shared/game';
 import { PlannerDocument } from './ui/planner.document';
 
 @Injectable()
@@ -20,7 +19,7 @@ export class PlannerService {
     private cardService: CardService,
     private ignRepository: IgnRepository,
     private marketService: MarketService,
-    private resultsService: ResultsService,
+    private plannerTeamRepository: PlannerTeamRepository,
   ) {}
 
   async getPlannerDocuments(
@@ -34,11 +33,10 @@ export class PlannerService {
       this.ignRepository.save([{ id: form.playerName }]);
     }
 
-    const { teams, battles } = await this.resultsService.getTeamResults(
+    const teams = await this.plannerTeamRepository.find(
       form.manaCap,
       form.leagueGroup ?? DEFAULT_MAIN_FORM.leagueGroup,
-      subscribed ?? false,
-      5,
+      true,
     );
 
     const cardPrices: Record<string, number> =
@@ -56,7 +54,11 @@ export class PlannerService {
       currency,
     );
 
-    return { plannerDocuments, battles };
+    return {
+      plannerDocuments,
+      battleCount: teams[0]?.battlesTotal,
+      firstBattleTimestamp: teams[0]?.battlesStart.getTime() / 1000,
+    };
   }
 
   mapToQuests(summoner: Card, monsters: Card[]) {
@@ -93,7 +95,7 @@ export class PlannerService {
   }
 
   async mapDocuments(
-    detailedTeams: TeamResults[],
+    plannerTeams: PlannerTeam[],
     cardPrices: Record<string, number>,
     currency: CurrencyDto,
   ): Promise<PlannerDocument[]> {
@@ -104,7 +106,7 @@ export class PlannerService {
       currency.id,
     );
 
-    return _.chain(detailedTeams)
+    return _.chain(plannerTeams)
       .map((team) => {
         const mana =
           team.summoner.stats.mana +
@@ -150,7 +152,7 @@ export class PlannerService {
           .value();
 
         const document: PlannerDocument = {
-          id: team.id,
+          id: uuidv4(),
           updated: now,
           battles: team.battles,
           fiatSymbol: currency.symbol,
