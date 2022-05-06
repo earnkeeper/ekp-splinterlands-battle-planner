@@ -62,11 +62,13 @@ export class PlannerController extends AbstractController {
           event.state.client.selectedCurrency,
         );
 
-      await this.clientService.emitDocuments(
-        event,
-        COLLECTION_NAME,
-        plannerDocuments,
-      );
+      await this.clientService.removeOldLayers(event, COLLECTION_NAME);
+
+      for (const document of plannerDocuments) {
+        await this.clientService.emitPartialDocuments(event, COLLECTION_NAME, [
+          document,
+        ]);
+      }
 
       const viewBag = new PlannerViewBag({
         id: 'viewbag',
