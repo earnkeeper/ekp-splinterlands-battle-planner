@@ -4,11 +4,10 @@ import { Injectable } from '@nestjs/common';
 import { validate } from 'bycontract';
 import _ from 'lodash';
 import moment from 'moment';
-import { v4 as uuidv4 } from 'uuid';
 import {
   IgnRepository,
   PlannerTeam,
-  PlannerTeamRepository,
+  PlannerTeamRepository
 } from '../../shared/db';
 import { Card, CardService, MarketService } from '../../shared/game';
 import { PlannerDocument } from './ui/planner.document';
@@ -152,7 +151,7 @@ export class PlannerService {
           .value();
 
         const document: PlannerDocument = {
-          id: uuidv4(),
+          id: team.id,
           updated: now,
           battles: team.battles,
           fiatSymbol: currency.symbol,
