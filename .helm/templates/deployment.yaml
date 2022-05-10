@@ -1,11 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-app-deploy
+  name: app-deploy
 spec:
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-app
+      app: app
   revisionHistoryLimit: 3
   strategy:
     type: RollingUpdate
@@ -13,10 +13,10 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-app
+        app: app
     spec:
       containers:
-        - name: {{ .Release.Name }}-nodejs
+        - name: nestjs
           image: '{{ .Values.werf.image.app }}'
           workingDir: /app
           env:
