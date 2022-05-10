@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { validate } from 'bycontract';
 import { Model } from 'mongoose';
-import { PlannerTeam } from './plannerTeam.schema';
+import { PlannerTeam } from './planner-team.schema';
 
 @Injectable()
 export class PlannerTeamRepository {
@@ -11,21 +11,13 @@ export class PlannerTeamRepository {
     public model: Model<PlannerTeam>,
   ) {}
 
-  async find(
-    manaCap: number,
-    leagueGroup: string,
-    subscribed: boolean,
-  ): Promise<PlannerTeam[]> {
-    validate(
-      [manaCap, leagueGroup, subscribed],
-      ['number', 'string', 'boolean'],
-    );
+  async find(manaCap: number, leagueGroup: string): Promise<PlannerTeam[]> {
+    validate([manaCap, leagueGroup], ['number', 'string']);
 
     return this.model
       .where({
         manaCap,
         leagueGroup,
-        subscribed,
       })
       .exec();
   }
@@ -43,9 +35,9 @@ export class PlannerTeamRepository {
         return {
           updateOne: {
             filter: {
+              id: model.id,
               leagueGroup: model.leagueGroup,
               manaCap: model.manaCap,
-              subscribed: model.subscribed,
             },
             update: {
               $set: model,

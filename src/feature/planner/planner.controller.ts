@@ -14,7 +14,6 @@ import {
 } from '@earnkeeper/ekp-sdk-nestjs';
 import { Injectable } from '@nestjs/common';
 import { PlannerService } from './planner.service';
-import { PlannerViewBag } from './ui/planner-view-bag.document';
 import { PlannerDocument } from './ui/planner.document';
 import planner from './ui/planner.uielement';
 
@@ -55,12 +54,11 @@ export class PlannerController extends AbstractController {
     try {
       const form = event.state.forms?.planner ?? DEFAULT_MAIN_FORM;
 
-      const { plannerDocuments, battleCount, firstBattleTimestamp } =
-        await this.plannerService.getPlannerDocuments(
-          form,
-          event.state.client.subscribed,
-          event.state.client.selectedCurrency,
-        );
+      const plannerDocuments = await this.plannerService.getPlannerDocuments(
+        form,
+        event.state.client.subscribed,
+        event.state.client.selectedCurrency,
+      );
 
       await this.clientService.removeOldLayers(event, COLLECTION_NAME);
 
@@ -69,18 +67,6 @@ export class PlannerController extends AbstractController {
           document,
         ]);
       }
-
-      const viewBag = new PlannerViewBag({
-        id: 'viewbag',
-        battleCount,
-        firstBattleTimestamp,
-      });
-
-      await this.clientService.emitDocuments(
-        event,
-        collection(PlannerViewBag),
-        [viewBag],
-      );
     } catch (error) {
       this.apmService.captureError(error);
       logger.error('Error occurred while handling battle planner event', error);

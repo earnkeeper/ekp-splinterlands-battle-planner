@@ -9,7 +9,7 @@ import {
   PlannerTeam,
   PlannerTeamRepository,
   PlannerTeamSchema,
-} from './plannerTeam';
+} from './planner-team';
 
 @Module({
   imports: [

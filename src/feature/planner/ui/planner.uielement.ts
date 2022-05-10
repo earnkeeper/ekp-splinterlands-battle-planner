@@ -18,16 +18,13 @@ import {
   Datatable,
   documents,
   Form,
-  formatAge,
   formatCurrency,
   formatPercent,
-  formatTemplate,
   Fragment,
   GridTile,
   Image,
   Input,
   isBusy,
-  path,
   Row,
   Select,
   showModal,
@@ -37,7 +34,6 @@ import {
 } from '@earnkeeper/ekp-sdk';
 import _ from 'lodash';
 import { pageHeader } from 'src/util/ui';
-import { PlannerViewBag } from './planner-view-bag.document';
 import { PlannerDocument } from './planner.document';
 
 export default function element(): UiElement {
@@ -154,16 +150,6 @@ function teamRow(): UiElement {
       Span({
         className: 'font-weight-bold font-medium-3 d-block',
         content: 'Viable Teams',
-      }),
-      Span({
-        className: 'd-block mt-1 mb-2 font-small-3',
-        content: formatTemplate(
-          'Data based on {{ battleCount }} battles starting {{ ago }}.',
-          {
-            battleCount: commify(`${path(PlannerViewBag)}.0.battleCount`),
-            ago: formatAge(`${path(PlannerViewBag)}.0.firstBattleTimestamp`),
-          },
-        ),
       }),
       Datatable({
         defaultSortFieldId: 'battles',

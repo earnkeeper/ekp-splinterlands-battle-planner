@@ -1,15 +1,11 @@
+import { IgnRepository, PlannerTeam, PlannerTeamRepository } from '@/shared/db';
+import { Card, CardService, MarketService } from '@/shared/game';
 import { DEFAULT_MAIN_FORM, MainForm } from '@/util';
 import { CurrencyDto } from '@earnkeeper/ekp-sdk';
 import { Injectable } from '@nestjs/common';
 import { validate } from 'bycontract';
 import _ from 'lodash';
 import moment from 'moment';
-import {
-  IgnRepository,
-  PlannerTeam,
-  PlannerTeamRepository
-} from '../../shared/db';
-import { Card, CardService, MarketService } from '../../shared/game';
 import { PlannerDocument } from './ui/planner.document';
 
 @Injectable()
@@ -35,7 +31,6 @@ export class PlannerService {
     const teams = await this.plannerTeamRepository.find(
       form.manaCap,
       form.leagueGroup ?? DEFAULT_MAIN_FORM.leagueGroup,
-      true,
     );
 
     const cardPrices: Record<string, number> =
@@ -53,11 +48,7 @@ export class PlannerService {
       currency,
     );
 
-    return {
-      plannerDocuments,
-      battleCount: teams[0]?.battlesTotal,
-      firstBattleTimestamp: teams[0]?.battlesStart,
-    };
+    return plannerDocuments;
   }
 
   mapToQuests(summoner: Card, monsters: Card[]) {
@@ -116,6 +107,9 @@ export class PlannerService {
 
         const monsters = [];
 
+        const battles = _.chain(team.daily).values().sumBy('battles').value();
+        const wins = _.chain(team.daily).values().sumBy('wins').value();
+
         monsters.push({
           id: team.summoner.id,
           fiatSymbol: currency.symbol,
@@ -153,7 +147,7 @@ export class PlannerService {
         const document: PlannerDocument = {
           id: team.id,
           updated: now,
-          battles: team.battles,
+          battles,
           fiatSymbol: currency.symbol,
           mana,
           monsterCount: team.monsters.length,
@@ -169,7 +163,7 @@ export class PlannerService {
             team.summoner.name
           }_lv${team.summoner.level}.png`,
           summonerEdition: team.summoner.edition,
-          winpc: (team.wins * 100) / team.battles,
+          winpc: (wins * 100) / battles,
         };
 
         return document;
