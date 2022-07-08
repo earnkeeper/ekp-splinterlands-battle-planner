@@ -2,6 +2,7 @@ import { SdkModule } from '@earnkeeper/ekp-sdk-nestjs';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { config } from './config';
+import { EmbedModule } from './feature/embed/embed.module';
 import { PlannerModule } from './feature/planner/planner.module';
 
 export const MODULE_DEF = {
@@ -13,6 +14,7 @@ export const MODULE_DEF = {
     ),
     PlannerModule,
     SdkModule,
+    EmbedModule,
   ],
 };
 

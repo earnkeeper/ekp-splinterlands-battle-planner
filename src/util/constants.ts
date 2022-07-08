@@ -6,6 +6,12 @@ export const DEFAULT_MAIN_FORM: MainForm = {
   playerName: '',
 };
 
+export const DEFAULT_EMBED_FORM: MainForm = {
+  leagueGroup: 'All',
+  manaCap: 14,
+  playerName: '',
+};
+
 export const LEADERBOARD_LEAGUES = [
   {
     id: 0,
