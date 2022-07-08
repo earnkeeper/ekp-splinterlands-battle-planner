@@ -74,9 +74,11 @@ function listingRow(documentIndex: number) {
         children: [
           Span({
             className: 'text-success font-small-3 d-block',
-            content: formatTemplate('Win Rate {{ winRate }}', {
-              winRate: formatPercent('$.winRate'),
-            }),
+            content: formatPercent('$.winRate'),
+          }),
+          Span({
+            className: 'text-success font-small-1 d-block',
+            content: 'Win Rate',
           }),
         ],
       }),
