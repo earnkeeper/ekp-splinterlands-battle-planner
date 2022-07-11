@@ -33,6 +33,7 @@ export class EmbedController extends AbstractController {
 
     const form = event.state.forms?.planner ?? DEFAULT_EMBED_FORM;
     const planner = await this.plannerService.getPlannerDocuments(
+      true,
       form,
       event.state.client.subscribed,
       currency,

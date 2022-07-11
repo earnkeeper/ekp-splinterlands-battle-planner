@@ -18,6 +18,7 @@ export class PlannerService {
   ) {}
 
   async getPlannerDocuments(
+    isEmbed: boolean,
     form: MainForm,
     subscribed: boolean,
     currency: CurrencyDto,
@@ -28,10 +29,17 @@ export class PlannerService {
       this.ignRepository.save([{ id: form.playerName }]);
     }
 
-    const teams = await this.plannerTeamRepository.find(
-      form.manaCap,
-      form.leagueGroup ?? DEFAULT_MAIN_FORM.leagueGroup,
-    );
+    let teams;
+    if (!!isEmbed) {
+      teams = await this.plannerTeamRepository.findAll(
+        form.leagueGroup ?? DEFAULT_MAIN_FORM.leagueGroup,
+      );
+    } else {
+      teams = await this.plannerTeamRepository.find(
+        form.manaCap,
+        form.leagueGroup ?? DEFAULT_MAIN_FORM.leagueGroup,
+      );
+    }
 
     const cardPrices: Record<string, number> =
       await this.marketService.getMarketPrices();
@@ -47,7 +55,6 @@ export class PlannerService {
       cardPrices,
       currency,
     );
-
     return plannerDocuments;
   }
 

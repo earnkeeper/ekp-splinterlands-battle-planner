@@ -9,7 +9,7 @@ export class EmbedService {
     planner: PlannerDocument[],
   ): Promise<EmbedDataDocument[]> {
     return _.chain(planner)
-      .filter((planner) => planner.battles > 2)
+      .filter((planner) => planner.battles > 10)
       .sortBy((planner) => planner.winpc)
       .takeRight(3)
       .map((planner) => {

@@ -55,6 +55,7 @@ export class PlannerController extends AbstractController {
       const form = event.state.forms?.planner ?? DEFAULT_MAIN_FORM;
 
       const plannerDocuments = await this.plannerService.getPlannerDocuments(
+        false,
         form,
         event.state.client.subscribed,
         event.state.client.selectedCurrency,

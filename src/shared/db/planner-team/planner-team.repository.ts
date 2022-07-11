@@ -22,6 +22,16 @@ export class PlannerTeamRepository {
       .exec();
   }
 
+  async findAll(leagueGroup: string): Promise<PlannerTeam[]> {
+    validate([leagueGroup], ['string']);
+
+    return this.model
+      .where({
+        leagueGroup,
+      })
+      .exec();
+  }
+
   async save(documents: PlannerTeam[]): Promise<void> {
     validate([documents], ['Array.<object>']);
 
